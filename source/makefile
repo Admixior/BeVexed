@@ -8,7 +8,9 @@ Preferences.cpp \
 App.cpp \
 Grid.cpp \
 MainWindow.cpp \
-TileView.cpp
+TileView.cpp \
+HighScores.cpp \
+HighScoresWindow.cpp
 
 RDEFS= BeVexed.rdef
 

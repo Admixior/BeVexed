@@ -15,6 +15,8 @@
 #include "TileView.h"
 #include "Grid.h"
 #include "ImageAlert.h"
+#include "HighScores.h"
+#include "HighScoresWindow.h"
 
 enum
 {
@@ -33,6 +35,13 @@ enum
 	M_SET_TILE_COUNT_6,
 	M_SET_TILE_COUNT_7,
 	
+	M_HIGHSCORES_0,
+	
+	M_HIGHSCORES_1,
+	M_HIGHSCORES_2,
+	M_HIGHSCORES_3,
+	M_HIGHSCORES_4,
+	
 	M_HOW_TO_PLAY
 };
 
@@ -49,6 +58,8 @@ MainWindow::MainWindow(void)
 	path.Append("backgrounds");
 	fBackPath = path.Path();
 	fBackPath << "/";
+	
+	LoadHighScores();
 	
 	static const rgb_color beos_blue = {51,102,152,255};
 	LoadPreferences(PREFERENCES_PATH);
@@ -94,7 +105,7 @@ MainWindow::MainWindow(void)
 	submenu->AddItem(new BMenuItem("Small",new BMessage(M_SMALL_TILES)));
 	submenu->AddItem(new BMenuItem("Medium",new BMessage(M_MEDIUM_TILES)));
 	submenu->AddItem(new BMenuItem("Large",new BMessage(M_LARGE_TILES)));
-	submenu->AddItem(new BMenuItem("Extra Large",new BMessage(M_HUGE_TILES)));
+	submenu->AddItem(new BMenuItem("Extra large",new BMessage(M_HUGE_TILES)));
 	submenu->SetRadioMode(true);
 	menu->AddItem(submenu);
 	
@@ -131,8 +142,18 @@ MainWindow::MainWindow(void)
 		}
 	}
 	
+	submenu = new BMenu("Highscores");
+	submenu->AddItem(new BMenuItem("Beginner",new BMessage(M_HIGHSCORES_0)));
+	submenu->AddItem(new BMenuItem("Easy",new BMessage(M_HIGHSCORES_1)));
+	submenu->AddItem(new BMenuItem("Medium",new BMessage(M_HIGHSCORES_2)));
+	submenu->AddItem(new BMenuItem("Hard",new BMessage(M_HIGHSCORES_3)));
+	submenu->AddItem(new BMenuItem("Master",new BMessage(M_HIGHSCORES_4)));
+	submenu->SetRadioMode(true);
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem("How to Play…",new BMessage(M_HOW_TO_PLAY)));
+	menu->AddItem(submenu);
+	
+	menu->AddSeparatorItem();
+	menu->AddItem(new BMenuItem("How to play…",new BMessage(M_HOW_TO_PLAY)));
 	menu->AddSeparatorItem();
 	menu->AddItem(new BMenuItem("About BeVexed…",new BMessage(B_ABOUT_REQUESTED)));
 	GenerateGrid(fGridSize);
@@ -157,6 +178,7 @@ bool MainWindow::QuitRequested(void)
 {
 	gPreferences.ReplacePoint("corner",Frame().LeftTop());
 	SavePreferences(PREFERENCES_PATH);
+	SaveHighScores();
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }
@@ -251,6 +273,16 @@ void MainWindow::MessageReceived(BMessage *msg)
 			else
 				SetBackground(NULL);
 			break;
+		}
+		case M_HIGHSCORES_0:
+		case M_HIGHSCORES_1:
+		case M_HIGHSCORES_2:
+		case M_HIGHSCORES_3:
+		case M_HIGHSCORES_4:
+		{
+			HighScoresWindow* window = new HighScoresWindow( 0, -1, msg->what - M_HIGHSCORES_0);
+			window->Run();
+			delete window;
 		}
 		case M_HOW_TO_PLAY:
 		{
