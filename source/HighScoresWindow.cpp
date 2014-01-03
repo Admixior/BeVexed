@@ -8,8 +8,8 @@
 #include <Alert.h>
 
 HighScoresWindow::HighScoresWindow(Score* player, int place, int difficulty)
- : BWindow(BRect(100,100,500,600),"Highscores",B_TITLED_WINDOW_LOOK,
- 	B_NORMAL_WINDOW_FEEL, B_ASYNCHRONOUS_CONTROLS | B_NOT_RESIZABLE)
+ : BWindow(BRect(100,100,500,600),"Highscores",(window_look)(B_TITLED_WINDOW_LOOK | B_MODAL_WINDOW_LOOK),
+ 	B_MODAL_APP_WINDOW_FEEL, B_ASYNCHRONOUS_CONTROLS | B_NOT_RESIZABLE)
 {BString abc;
 abc<<place<<":"<<difficulty<<":"<<(int)player;
 	BAlert* ale =new BAlert ("Highscores", abc.String(), "OK"); ale->Go();

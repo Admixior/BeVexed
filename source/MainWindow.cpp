@@ -281,8 +281,9 @@ void MainWindow::MessageReceived(BMessage *msg)
 		case M_HIGHSCORES_4:
 		{
 			HighScoresWindow* window = new HighScoresWindow( 0, -1, msg->what - M_HIGHSCORES_0);
-			window->Run();
+			window->Show();
 			delete window;
+			break;
 		}
 		case M_HOW_TO_PLAY:
 		{
